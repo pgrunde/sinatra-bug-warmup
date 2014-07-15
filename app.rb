@@ -20,21 +20,16 @@ class App < Sinatra::Base
   end
 
   post "/registrations" do
-    if params[:name_is_hunter] == 0
-      hunter_confirm = true
-    else
-      hunter_confirm = false
-    end
     insert_sql = <<-SQL
       INSERT INTO users (username, email, password, name_is_hunter)
-      VALUES ('#{params[:username]}', '#{params[:email]}', '#{params[:password]}', '#{hunter_confirm}')
+      VALUES ('#{params[:username]}', '#{params[:email]}', '#{params[:password]}', '#{params[:name_is_hunter]}')
     SQL
 
     begin
       @database_connection.sql(insert_sql)
       flash[:notice] = "Thanks for signing up"
     rescue
-      flash[:notice] = "Username / Password / email combo invalid or already taken."
+      flash[:notice] = "Username / Password / email combo invalid or already taken. Make sure box is checked."
     end
     redirect "/"
   end
